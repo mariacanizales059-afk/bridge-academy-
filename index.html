@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bridge Academy Reel</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #020b18;
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Formato vertical 9:16 para Reels */
+    .reel {
+      position: relative;
+      width: min(100vw, 607px);
+      height: min(100vh, 1080px);
+      margin: auto;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 30%, #123d35 0%, transparent 45%),
+        linear-gradient(180deg, #020b18 0%, #061b2f 100%);
+    }
+
+    .brand {
+      position: absolute;
+      top: 7%;
+      width: 100%;
+      text-align: center;
+      z-index: 3;
+    }
+
+    .brand h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(28px, 5vw, 50px);
+      letter-spacing: 10px;
+    }
+
+    .brand p {
+      margin-top: 7px;
+      color: #9ed83b;
+      font-size: clamp(13px, 2vw, 20px);
+      letter-spacing: 9px;
+    }
+
+    .terminal {
+      position: absolute;
+      top: 24%;
+      left: 7%;
+      width: 86%;
+      min-height: 42%;
+      overflow: hidden;
+      border: 2px solid #39d9e6;
+      border-radius: 18px;
+      background: rgba(1, 10, 20, 0.94);
+      box-shadow: 0 0 40px rgba(57, 217, 230, 0.25);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+
+    .terminal-header {
+      display: flex;
+      gap: 9px;
+      padding: 17px;
+      border-bottom: 1px solid #194456;
+      background: #071523;
+    }
+
+    .circle {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+    }
+
+    .red { background: #ff5570; }
+    .yellow { background: #ffc83d; }
+    .green { background: #88d83d; }
+
+    .terminal-body {
+      padding: 30px 25px;
+      color: #d9f9ff;
+      font-family: Consolas, Monaco, monospace;
+      font-size: clamp(17px, 3vw, 27px);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 12px;
+      height: 1em;
+      margin-left: 3px;
+      vertical-align: middle;
+      background: #9ed83b;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .terminal.hide {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    .result {
+      position: absolute;
+      top: 27%;
+      left: 6%;
+      width: 88%;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: 0.9s ease;
+    }
+
+    .result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .level {
+      color: #9ed83b;
+      font-family: Consolas, monospace;
+      font-size: clamp(18px, 3vw, 28px);
+      letter-spacing: 4px;
+    }
+
+    .result h2 {
+      margin: 25px 0 15px;
+      font-size: clamp(45px, 9vw, 85px);
+      line-height: 0.95;
+    }
+
+    .result h2 span {
+      color: #9ed83b;
+    }
+
+    .result p {
+      font-size: clamp(18px, 3vw, 29px);
+      line-height: 1.4;
+    }
+
+    .free-class {
+      display: inline-block;
+      margin-top: 35px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      background: #9ed83b;
+      color: #041323;
+      font-weight: bold;
+      font-size: clamp(18px, 3vw, 28px);
+    }
+
+    .whatsapp {
+      position: absolute;
+      bottom: 7%;
+      left: 7%;
+      width: 86%;
+      padding: 20px 14px;
+      border-radius: 15px;
+      background: #075f42;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: 0.8s ease 0.5s;
+    }
+
+    .whatsapp.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .whatsapp small {
+      display: block;
+      margin-bottom: 5px;
+      font-size: clamp(14px, 2vw, 19px);
+    }
+
+    .whatsapp strong {
+      font-size: clamp(25px, 5vw, 43px);
+    }
+
+    .restart {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      cursor: pointer;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="reel">
+    <header class="brand">
+      <h1>BRIDGE</h1>
+      <p>ACADEMY</p>
+    </header>
+
+    <section class="terminal" id="terminal">
+      <div class="terminal-header">
+        <span class="circle red"></span>
+        <span class="circle yellow"></span>
+        <span class="circle green"></span>
+      </div>
+
+      <div class="terminal-body">
+        <span id="typing"></span><span class="cursor"></span>
+      </div>
+    </section>
+
+    <section class="result" id="result">
+      <div class="level">&gt; UPGRADE COMPLETE</div>
+
+      <h2>
+        DE <span>BEGINNER</span><br>
+        A READY TO START
+      </h2>
+
+      <p>
+        Aprendé Linux, redes, Bash<br>
+        e inteligencia artificial desde cero.
+      </p>
+
+      <div class="free-class">
+        CLASE INTRODUCTORIA GRATIS
+      </div>
+    </section>
+
+    <section class="whatsapp" id="whatsapp">
+      <small>Reservá tu espacio por WhatsApp</small>
+      <strong>8406-3557</strong>
+    </section>
+
+    <button class="restart" onclick="startAnimation()">
+      Repetir
+    </button>
+  </main>
+
+  <script>
+    const text = `$ whoami
+BEGINNER
+
+$ bridge-academy --start
+
+[✓] Linux cargado
+[✓] Networking conectado
+[✓] Bash activado
+[✓] Inteligencia artificial lista
+
+Actualizando tu futuro... 100%`;
+
+    const typing = document.getElementById("typing");
+    const terminal = document.getElementById("terminal");
+    const result = document.getElementById("result");
+    const whatsapp = document.getElementById("whatsapp");
+
+    let timer;
+
+    function startAnimation() {
+      clearTimeout(timer);
+
+      typing.textContent = "";
+      terminal.classList.remove("hide");
+      result.classList.remove("show");
+      whatsapp.classList.remove("show");
+
+      let position = 0;
+
+      function typeCharacter() {
+        if (position < text.length) {
+          typing.textContent += text[position];
+          position++;
+
+          const speed = text[position - 1] === "\n" ? 250 : 35;
+          timer = setTimeout(typeCharacter, speed);
+        } else {
+          timer = setTimeout(showResult, 1000);
+        }
+      }
+
+      typeCharacter();
+    }
+
+    function showResult() {
+      terminal.classList.add("hide");
+
+      setTimeout(() => {
+        result.classList.add("show");
+        whatsapp.classList.add("show");
+      }, 500);
+    }
+
+    startAnimation();
+  </script>
+</body>
+</html>
